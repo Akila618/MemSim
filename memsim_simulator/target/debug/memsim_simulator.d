@@ -1,1 +1,0 @@
-C:\Users\User\Desktop\MemSim\memsim_simulator\target\debug\memsim_simulator.exe: C:\Users\User\Desktop\MemSim\memsim_simulator\src\main.rs C:\Users\User\Desktop\MemSim\memsim_simulator\src\memory.rs C:\Users\User\Desktop\MemSim\memsim_simulator\src\sync.rs C:\Users\User\Desktop\MemSim\memsim_simulator\src\ws_handler.rs
