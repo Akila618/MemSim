@@ -160,7 +160,7 @@ pub fn create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, Mem
 //     }
 // }
 
-fn allocate_process_to_memory(
+pub fn allocate_process_to_memory(
     process_size: i32,
     free_blocks: &mut HashMap<String, MemoryBlock>,
 ) -> String {
