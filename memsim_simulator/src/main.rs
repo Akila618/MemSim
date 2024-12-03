@@ -1,9 +1,9 @@
 use std::sync::{Arc,Mutex};
+use std::collections::HashMap;
 mod memory;
 mod gui;
 
-
-/* Selected memory allocation technique */
+#[derive(Debug, Clone)]
 pub struct ProjectInfo {
     pub student: String,
     pub reg: i32,
@@ -33,6 +33,8 @@ pub fn memory_algorithm_selector() -> ProjectInfo {
     }
 }
 
+
+
 fn main() {
     // Student & project info
     println!("-----------------------------------------------------------------------------------");
@@ -41,8 +43,18 @@ fn main() {
     println!("Memory allocation algorithm: {:?}", memory_algorithm_selector().technique);
     println!("-----------------------------------------------------------------------------------");
 
-    // Initialize memory state (shared across threads)
-    let memory_state = Arc::new(Mutex::new(memory::initialize_memory()));
+    let mut free_blocks = memory::initialize_memory();
+    let processes = vec![50, 30, 120];
+
+    println!("Initial state of free blocks:");
+    for (key, block) in &free_blocks {
+        println!(
+            "{}: Size = {}, Allocated = {}, Fragmentation = {:?}",
+            key, block.size, block.allocated, block.fragmentation
+        );
+    }
+
+    // handle_user_processes(processes, &mut free_blocks);
 
 }
 
