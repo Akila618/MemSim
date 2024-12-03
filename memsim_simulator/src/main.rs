@@ -1,5 +1,6 @@
 use std::sync::{Arc,Mutex};
 use std::collections::HashMap;
+use std::io;
 mod memory;
 mod gui;
 
@@ -33,28 +34,53 @@ pub fn memory_algorithm_selector() -> ProjectInfo {
     }
 }
 
-
-
 fn main() {
-    // Student & project info
-    println!("-----------------------------------------------------------------------------------");
-    println!("Student_Name: {:?}", memory_algorithm_selector().student);
-    println!("Reg_Number: {:?}", memory_algorithm_selector().reg);
-    println!("Memory allocation algorithm: {:?}", memory_algorithm_selector().technique);
-    println!("-----------------------------------------------------------------------------------");
-
-    let mut free_blocks = memory::initialize_memory();
-    let processes = vec![50, 30, 120];
-
-    println!("Initial state of free blocks:");
-    for (key, block) in &free_blocks {
+    let memory_blocks = memory::initialize_memory();
+    let mut locations = Vec::new();
+    println!("Initial memory blocks:");
+    for (name, block) in &memory_blocks {
+        locations.push(block.clone());
         println!(
-            "{}: Size = {}, Allocated = {}, Fragmentation = {:?}",
-            key, block.size, block.allocated, block.fragmentation
+            "Partition: {}, Location: {}, Size: {} KB, Allocated: {}, Fragmentation: {:?}",
+            block.partition, block.location, block.size, block.allocated, block.fragmentation
         );
     }
 
-    // handle_user_processes(processes, &mut free_blocks);
+    let mut free_blocks = memory::create_free_location_map(locations);
+    println!("\nFree memory locations:");
+    for (key, block) in &free_blocks {
+        println!(
+            "Partition: {}, Location: {}, Size: {} KB",
+            key, block.location, block.size
+        );
+    }
 
+    println!("\nEnter the number of processes:");
+    let mut num_processes = String::new();
+    io::stdin()
+        .read_line(&mut num_processes)
+        .expect("Failed to read input");
+    let num_processes: usize = num_processes.trim().parse().expect("Enter a valid number");
+
+    let mut processes = Vec::new();
+    for i in 1..=num_processes {
+        println!("Enter size for Process {} (in KB):", i);
+        let mut process_size = String::new();
+        io::stdin()
+            .read_line(&mut process_size)
+            .expect("Failed to read input");
+        let process_size: i32 = process_size.trim().parse().expect("Enter a valid number");
+        processes.push(process_size);
+    }
+
+    println!("\nAllocating processes...");
+    memory::handle_user_processes(processes, &mut free_blocks);
+
+    println!("\nFinal state of memory blocks:");
+    for (key, block) in &free_blocks {
+        println!(
+            "Partition: {}, Location: {}, Size: {} KB, Allocated: {}, Fragmentation: {:?}",
+            key, block.location, block.size, block.allocated, block.fragmentation
+        );
+    }
 }
-

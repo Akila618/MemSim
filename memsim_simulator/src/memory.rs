@@ -278,7 +278,6 @@ mod unit_test_memory {
     use super::*;
     #[test]
     fn test_random_memory() {
-
         // test 1
         // let ram = random_memory_allocator();
         // assert!(!ram.is_empty());
