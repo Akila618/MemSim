@@ -27,16 +27,20 @@ impl MemorySimulatorApp {
     }
     
     fn calculate_memory_summary(&self) -> (i32, i32, i32) {
-        let total: i32 = self.memory.values().map(|block| block.size).sum(); // Sum of all block sizes
-        let occupied: i32 = self
-            .memory
-            .values()
-            .filter(|block| block.allocated) // Only allocated blocks
-            .map(|block| block.size)
-            .sum();
+        let mut total = 0;
+        let mut occupied = 0;
+    
+        for block in self.memory.values() {
+            total += block.size;
+            if block.allocated {
+                occupied += block.size;
+            }
+        }
+    
         let free = total - occupied;
         (total, occupied, free)
     }
+    
 
     fn draw_memory_visualization(&self, ui: &mut egui::Ui) {
         for (key, block) in &self.memory {
