@@ -1,6 +1,3 @@
-use std::sync::{Arc,Mutex};
-use std::collections::HashMap;
-use std::io;
 mod memory;
 mod gui;
 use eframe::NativeOptions;
@@ -86,8 +83,8 @@ fn main() {
     // }
 
     let options = NativeOptions::default();
-    eframe::run_native(
-        "Memory Allocation Simulator",
+    let _ = eframe::run_native(
+        "MemSim  v 1.0.1",
         options,
         Box::new(|_cc| Ok(Box::new(gui::MemorySimulatorApp::new()))),
     );

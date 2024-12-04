@@ -1,9 +1,4 @@
-use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
-use rand::Rng;
 use std::collections::HashMap;
-
-
 
 #[derive(Debug, Clone)]
 pub struct MemoryBlock {
@@ -24,39 +19,39 @@ pub struct Fragment {
 pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     let mut memory = HashMap::new();
     memory.insert(
-        "Block 1".to_string(),
+        "Block 01".to_string(),
         MemoryBlock {partition: "A".to_string(), location: "Block 1".to_string(), size: 60, allocated: true, fragmentation: None,},
     );
     memory.insert(
-        "Block 2".to_string(),
+        "Block 02".to_string(),
         MemoryBlock {partition: "B".to_string(), location: "Block 2".to_string(), size: 130, allocated: false, fragmentation: None,},
     );
     memory.insert(
-        "Block 3".to_string(),
+        "Block 03".to_string(),
         MemoryBlock {partition: "C".to_string(), location: "Block 3".to_string(), size: 90, allocated: true, fragmentation: None,},
     );
     memory.insert(
-        "Block 4".to_string(),
+        "Block 04".to_string(),
         MemoryBlock {partition: "D".to_string(), location: "Block 4".to_string(), size: 50, allocated: false, fragmentation: None,},
     );
     memory.insert(
-        "Block 5".to_string(),
+        "Block 05".to_string(),
         MemoryBlock {partition: "E".to_string(), location: "Block 5".to_string(), size: 160, allocated: true, fragmentation: None,},
     );
     memory.insert(
-        "Block 6".to_string(),
+        "Block 06".to_string(),
         MemoryBlock {partition: "F".to_string(), location: "Block 6".to_string(), size: 120, allocated: false, fragmentation: None,},
     );
     memory.insert(
-        "Block 7".to_string(),
+        "Block 07".to_string(),
         MemoryBlock {partition: "G".to_string(), location: "Block 7".to_string(), size: 75, allocated: true, fragmentation: None,},
     );
     memory.insert(
-        "Block 8".to_string(),
+        "Block 08".to_string(),
         MemoryBlock {partition: "H".to_string(), location: "Block 8".to_string(), size: 40, allocated: false, fragmentation: None,},
     );
     memory.insert(
-        "Block 9".to_string(),
+        "Block 09".to_string(),
         MemoryBlock {partition: "I".to_string(), location: "Block 9".to_string(), size: 25, allocated: true, fragmentation: None,},
     );
     memory.insert(
@@ -114,51 +109,6 @@ pub fn create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, Mem
     free_locations
 }
 
-// Function to allocate the process to the relevent memory
-// pub fn allocate_process_to_memory(
-//     process_size: i32,
-//     free_blocks: &mut HashMap<String, MemoryBlock>,
-// ) -> String {
-//     let mut best_fit_block: Option<&mut MemoryBlock> = None;
-//     let mut min_fragmentation = i32::MAX; // Start with a large value for comparison
-//     let mut best_fit_key: Option<String> = None;
-
-//     for (key, block) in free_blocks.iter_mut() {
-//         if !block.allocated && block.size >= process_size {
-//             let free_space = block.size - process_size;
-
-//             // Check for best fit (minimum internal fragmentation)
-//             if free_space < min_fragmentation {
-//                 min_fragmentation = free_space;
-//                 best_fit_block = Some(block);
-//                 best_fit_key = Some(key.clone());
-//             }
-//         }
-//     }
-
-//     match best_fit_block {
-//         Some(block) => {
-//             // Update the block
-//             block.allocated = true;
-//             block.fragmentation = Some(Fragment {
-//                 original: block.size,
-//                 occupied: process_size,
-//                 free: min_fragmentation,
-//             });
-
-//             // Remove the block from the free blocks list
-//             if let Some(key) = best_fit_key {
-//                 free_blocks.remove(&key);
-//             }
-
-//             format!(
-//                 "Process allocated to {} with {} KB internal fragmentation.",
-//                 block.location, min_fragmentation
-//             )
-//         }
-//         None => "No suitable block found.".to_string(),
-//     }
-// }
 
 pub fn allocate_process_to_memory(
     process_size: i32,
@@ -201,7 +151,6 @@ pub fn allocate_process_to_memory(
         None => "No suitable block found.".to_string(),
     }
 }
-
 
 
 //function to get a array of user inputs and call allocate_process_to_memory() function
@@ -275,7 +224,6 @@ pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
 /* Unit tests for functions */
 #[cfg(test)]
 mod unit_test_memory {
-    use super::*;
     #[test]
     fn test_random_memory() {
         // test 1
