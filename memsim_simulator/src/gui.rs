@@ -51,9 +51,9 @@ impl MemorySimulatorApp {
 
                 let bar_text = format!("{} KB", block.size);
                 ui.add(
-                    egui::ProgressBar::new(block.size as f32 / 1024.0) // Normalize block size
+                    egui::ProgressBar::new(block.size as f32 / 350.0) 
                         .fill(color)
-                        .text(egui::RichText::new(bar_text).color(egui::Color32::BLACK)), // Set text inside the bar
+                        .text(egui::RichText::new(bar_text).color(egui::Color32::BLACK)),
                 );
 
                 ui.label(format!(
@@ -69,9 +69,9 @@ impl MemorySimulatorApp {
 impl eframe::App for MemorySimulatorApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.heading("Memory Allocation Simulator");
+            ui.heading("MEMSIM : Best-Fit Memory Allocation Simulator");
+            ui.separator();
 
-            // Memory summary
             let (total, occupied, free) = self.calculate_memory_summary();
             ui.label(format!("Total Memory: {} KB", total));
             ui.label(format!("Occupied Memory: {} KB", occupied));
@@ -79,13 +79,11 @@ impl eframe::App for MemorySimulatorApp {
 
             ui.separator();
 
-            // Graphical Memory
             ui.heading("Memory Visualization:");
             self.draw_memory_visualization(ui);
 
             ui.separator();
 
-            // Add input
             ui.horizontal(|ui| {
                 ui.label("Process Size (KB):");
                 ui.text_edit_singleline(&mut self.input_size);
@@ -103,7 +101,6 @@ impl eframe::App for MemorySimulatorApp {
 
             ui.separator();
 
-            // Start allocation
             if ui.button("Allocate Processes").clicked() {
                 for process in &self.processes {
                     let result = allocate_process_to_memory(*process, &mut self.memory);
@@ -112,7 +109,6 @@ impl eframe::App for MemorySimulatorApp {
                 self.processes.clear();
             }
 
-            // Compaction
             if ui.button("Compact Memory").clicked() {
                 compact_memory(&mut self.memory);
                 self.log = format!("{}\nMemory compacted.", self.log);
@@ -120,9 +116,14 @@ impl eframe::App for MemorySimulatorApp {
 
             ui.separator();
 
-            // Log output
             ui.label("Logs:");
-            ui.label(&self.log);
+            ui.heading(&self.log);
+
+
+            ui.separator();
+            ui.label(format!("EEX5563 - Computer Architecture and OS"));
+            ui.label(format!("W.M.T.Wanninayake"));
+            ui.label(format!("Reg: 32142845"));
         });
     }
 }
