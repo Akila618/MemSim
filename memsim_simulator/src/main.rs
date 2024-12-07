@@ -2,15 +2,8 @@ mod memory;
 mod gui;
 use eframe::NativeOptions;
 
-#[derive(Debug, Clone)]
-pub struct ProjectInfo {
-    pub student: String,
-    pub reg: i32,
-    pub technique: String,
-}
-
 // Selected algorithm for the project
-pub fn memory_algorithm_selector() -> ProjectInfo {
+pub fn memory_algorithm_selector() {
     /* Student information */
     let s_name = "W.M.A.T. Wanninayake";
     let reg_no = 321428456;
@@ -25,14 +18,24 @@ pub fn memory_algorithm_selector() -> ProjectInfo {
         _ => "",
     };
 
-    ProjectInfo {
-        student: s_name.to_string(),
-        reg: reg_no,
-        technique: algorithm.to_string(),
-    }
+    println!("Student: {}", s_name);
+    println!("Reg: {}", reg_no); 
+    println!("Technique: {}", algorithm);
+
 }
 
 fn main() {
+
+    memory_algorithm_selector();  
+    let options = NativeOptions::default();
+    let _ = eframe::run_native(
+        "MemSim  v 1.0.2",
+        options,
+        Box::new(|_cc| Ok(Box::new(gui::MemorySimulatorApp::new()))),
+    );  
+
+    /* Below commented code can be executed to get the results using the CMD */
+
     // let memory_blocks = memory::initialize_memory();
     // let mut locations = Vec::new();
     // println!("Initial memory blocks:");
@@ -82,10 +85,4 @@ fn main() {
     //     );
     // }
 
-    let options = NativeOptions::default();
-    let _ = eframe::run_native(
-        "MemSim  v 1.0.1",
-        options,
-        Box::new(|_cc| Ok(Box::new(gui::MemorySimulatorApp::new()))),
-    );
 }

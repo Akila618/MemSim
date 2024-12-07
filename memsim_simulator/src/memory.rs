@@ -11,8 +11,8 @@ pub struct MemoryBlock {
 
 #[derive(Debug, Clone)]
 pub struct Fragment {
-    pub original: i32,
-    pub occupied: i32,
+    pub _original: i32,
+    pub _occupied: i32,
     pub free: i32,
 }
 
@@ -20,7 +20,7 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     let mut memory = HashMap::new();
     memory.insert(
         "Block 01".to_string(),
-        MemoryBlock {partition: "A".to_string(), location: "Block 1".to_string(), size: 60, allocated: true, fragmentation: None,},
+        MemoryBlock {partition: "A".to_string(), location: "Block 1".to_string(), size: 64, allocated: true, fragmentation: None,},
     );
     memory.insert(
         "Block 02".to_string(),
@@ -32,7 +32,7 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     );
     memory.insert(
         "Block 04".to_string(),
-        MemoryBlock {partition: "D".to_string(), location: "Block 4".to_string(), size: 50, allocated: false, fragmentation: None,},
+        MemoryBlock {partition: "D".to_string(), location: "Block 4".to_string(), size: 70, allocated: false, fragmentation: None,},
     );
     memory.insert(
         "Block 05".to_string(),
@@ -48,7 +48,7 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     );
     memory.insert(
         "Block 08".to_string(),
-        MemoryBlock {partition: "H".to_string(), location: "Block 8".to_string(), size: 40, allocated: false, fragmentation: None,},
+        MemoryBlock {partition: "H".to_string(), location: "Block 8".to_string(), size: 45, allocated: false, fragmentation: None,},
     );
     memory.insert(
         "Block 09".to_string(),
@@ -58,46 +58,21 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
         "Block 10".to_string(),
         MemoryBlock {partition: "J".to_string(), location: "Block 10".to_string(), size: 100, allocated: false, fragmentation: None,},
     );
+    memory.insert(
+        "Block 11".to_string(),
+        MemoryBlock {partition: "K".to_string(), location: "Block 11".to_string(), size: 35, allocated: true, fragmentation: None,},
+    );
+    memory.insert(
+        "Block 12".to_string(),
+        MemoryBlock {partition: "L".to_string(), location: "Block 12".to_string(), size: 110, allocated: false, fragmentation: None,},
+    );
     
     memory
 }
 
 
-// Function that allocates a random memery values for the memory locations
-// pub fn random_memory_allocator() -> Vec<MemoryBlock> {
-//     let init_memory = initialize_memory();
-//     let mut initial_vec: Vec<MemoryBlock> = Vec::new();
-//     let mut memory_capacity: i32 = 1024; 
-//     let mut rng = rand::thread_rng();
-
-//     for (i, item) in init_memory.into_iter().enumerate() {
-//         let mem_value: i32;
-
-//         if i < 9 {
-//             let random_number: i32 = rng.gen_range(10..=30) * 5;
-//             println!("Random number for {}: {}", item.location, random_number);
-//             memory_capacity = memory_capacity.saturating_sub(random_number as i32); 
-//             mem_value = random_number;
-//         } else {
-//             mem_value = memory_capacity;
-//         }
-
-//         // let latest_mem_block = MemoryBlock {
-//         //     partition: item.partition,
-//         //     location: item.location,
-//         //     size: mem_value,
-//         //     allocated: item.allocated,
-//         //     fragmentation: None
-//         // };
-
-//         initial_vec.push(latest_mem_block);
-//     }
-
-//     initial_vec
-// }
-
 // Function to filter out the available memory locations and create a hashmap
-pub fn create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, MemoryBlock> {
+pub fn _create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, MemoryBlock> {
     let mut free_locations: HashMap<String, MemoryBlock> = HashMap::new();
 
     for location in memory{
@@ -112,17 +87,17 @@ pub fn create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, Mem
 
 pub fn allocate_process_to_memory(
     process_size: i32,
-    free_blocks: &mut HashMap<String, MemoryBlock>,
+    memory: &mut HashMap<String, MemoryBlock>,
 ) -> String {
-    let mut best_fit_key: Option<String> = None;
-    let mut min_fragmentation = i32::MAX; // Start with a large value for comparison
+    let mut best_fit_key = None;
+    let mut min_fragmentation = i32::MAX;
 
-    for (key, block) in free_blocks.iter() {
+    // Find the best-fit block
+    for (key, block) in memory.iter() {
         if !block.allocated && block.size >= process_size {
-            let free_space = block.size - process_size;
-
-            if free_space < min_fragmentation {
-                min_fragmentation = free_space;
+            let fragmentation = block.size - process_size;
+            if fragmentation < min_fragmentation {
+                min_fragmentation = fragmentation;
                 best_fit_key = Some(key.clone());
             }
         }
@@ -130,31 +105,31 @@ pub fn allocate_process_to_memory(
 
     match best_fit_key {
         Some(key) => {
-            // Get a mutable reference to the block
-            if let Some(block) = free_blocks.get_mut(&key) {
+            if let Some(block) = memory.get_mut(&key) {
                 // Update the block
                 block.allocated = true;
                 block.fragmentation = Some(Fragment {
-                    original: block.size,
-                    occupied: process_size,
+                    _original: block.size,
+                    _occupied: process_size,
                     free: min_fragmentation,
                 });
+
+                format!(
+                    "Process allocated to {} with {} KB internal fragmentation.",
+                    block.location, min_fragmentation
+                )
+            } else {
+                "Block not found.".to_string()
             }
-
-            free_blocks.remove(&key);
-
-            format!(
-                "Process allocated to {} with {} KB internal fragmentation.",
-                key, min_fragmentation
-            )
         }
         None => "No suitable block found.".to_string(),
     }
 }
 
 
+
 //function to get a array of user inputs and call allocate_process_to_memory() function
-pub fn handle_user_processes(
+pub fn _handle_user_processes(
     processes: Vec<i32>,
     free_blocks: &mut HashMap<String, MemoryBlock>,
 ) {
@@ -189,7 +164,7 @@ pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
     let mut total_free_space = 0;
     let mut compacted_blocks: HashMap<String, MemoryBlock> = HashMap::new();
 
-    for (key, block) in free_blocks.iter_mut() {
+    for (_key, block) in free_blocks.iter_mut() {
         if block.allocated {
             // Add internal fragmentation to total free space
             if let Some(frag) = &block.fragmentation {
