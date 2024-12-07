@@ -1,6 +1,6 @@
 use eframe::egui;
 use std::collections::HashMap;
-use crate::memory::{initialize_memory, create_free_location_map, allocate_process_to_memory, compact_memory, MemoryBlock};
+use crate::memory::{initialize_memory, allocate_process_to_memory, compact_memory, MemoryBlock};
 
 pub struct MemorySimulatorApp {
     memory: HashMap<String, MemoryBlock>,

@@ -11,8 +11,8 @@ pub struct MemoryBlock {
 
 #[derive(Debug, Clone)]
 pub struct Fragment {
-    pub original: i32,
-    pub occupied: i32,
+    pub _original: i32,
+    pub _occupied: i32,
     pub free: i32,
 }
 
@@ -72,7 +72,7 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
 
 
 // Function to filter out the available memory locations and create a hashmap
-pub fn create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, MemoryBlock> {
+pub fn _create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, MemoryBlock> {
     let mut free_locations: HashMap<String, MemoryBlock> = HashMap::new();
 
     for location in memory{
@@ -109,8 +109,8 @@ pub fn allocate_process_to_memory(
                 // Update the block
                 block.allocated = true;
                 block.fragmentation = Some(Fragment {
-                    original: block.size,
-                    occupied: process_size,
+                    _original: block.size,
+                    _occupied: process_size,
                     free: min_fragmentation,
                 });
 
@@ -129,7 +129,7 @@ pub fn allocate_process_to_memory(
 
 
 //function to get a array of user inputs and call allocate_process_to_memory() function
-pub fn handle_user_processes(
+pub fn _handle_user_processes(
     processes: Vec<i32>,
     free_blocks: &mut HashMap<String, MemoryBlock>,
 ) {
@@ -164,7 +164,7 @@ pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
     let mut total_free_space = 0;
     let mut compacted_blocks: HashMap<String, MemoryBlock> = HashMap::new();
 
-    for (key, block) in free_blocks.iter_mut() {
+    for (_key, block) in free_blocks.iter_mut() {
         if block.allocated {
             // Add internal fragmentation to total free space
             if let Some(frag) = &block.fragmentation {
