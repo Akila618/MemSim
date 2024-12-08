@@ -1,8 +1,9 @@
 mod memory;
 mod gui;
+mod bestfit;
 use eframe::NativeOptions;
 
-// Selected algorithm for the project
+/* select algorithm for the project and show student info */
 pub fn memory_algorithm_selector() {
     /* Student information */
     let s_name = "W.M.A.T. Wanninayake";
@@ -27,12 +28,16 @@ pub fn memory_algorithm_selector() {
 fn main() {
 
     memory_algorithm_selector();  
-    let options = NativeOptions::default();
+    let _options = NativeOptions::default();
     let _ = eframe::run_native(
-        "MemSim  v 1.0.2",
-        options,
-        Box::new(|_cc| Ok(Box::new(gui::MemorySimulatorApp::new()))),
-    );  
+        "Memory Allocation Simulator",
+        eframe::NativeOptions::default(),
+        Box::new(|_cc| {
+            let app = gui::MemorySimulatorApp::new();
+            Ok(Box::new(app))
+        }),
+    );
+    
 
     /* Below commented code can be executed to get the results using the CMD */
 

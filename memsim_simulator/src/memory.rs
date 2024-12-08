@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+/* struct to represent the memery block data*/
 #[derive(Debug, Clone)]
 pub struct MemoryBlock {
     pub partition: String,
@@ -9,6 +10,7 @@ pub struct MemoryBlock {
     pub fragmentation: Option<Fragment>,
 }
 
+/* struct to get the fragmentation info of the block */
 #[derive(Debug, Clone)]
 pub struct Fragment {
     pub _original: i32,
@@ -16,8 +18,10 @@ pub struct Fragment {
     pub free: i32,
 }
 
+/* finitialize a hashmap of memry size and block info */
 pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     let mut memory = HashMap::new();
+
     memory.insert(
         "Block 01".to_string(),
         MemoryBlock {partition: "A".to_string(), location: "Block 1".to_string(), size: 64, allocated: true, fragmentation: None,},
@@ -69,9 +73,25 @@ pub fn initialize_memory() -> HashMap<String, MemoryBlock> {
     
     memory
 }
+// pub fn initialize_memory() -> Vec<(String, MemoryBlock)> {
+//     vec![
+//         ("Block 01".to_string(), MemoryBlock { partition: "A".to_string(), location: "Block 1".to_string(), size: 64, allocated: true, fragmentation: None }),
+//         ("Block 02".to_string(), MemoryBlock { partition: "B".to_string(), location: "Block 2".to_string(), size: 130, allocated: false, fragmentation: None }),
+//         ("Block 03".to_string(), MemoryBlock { partition: "C".to_string(), location: "Block 3".to_string(), size: 90, allocated: true, fragmentation: None }),
+//         ("Block 04".to_string(), MemoryBlock { partition: "D".to_string(), location: "Block 4".to_string(), size: 70, allocated: false, fragmentation: None }),
+//         ("Block 05".to_string(), MemoryBlock { partition: "E".to_string(), location: "Block 5".to_string(), size: 160, allocated: true, fragmentation: None }),
+//         ("Block 06".to_string(), MemoryBlock { partition: "F".to_string(), location: "Block 6".to_string(), size: 120, allocated: false, fragmentation: None }),
+//         ("Block 07".to_string(), MemoryBlock { partition: "G".to_string(), location: "Block 7".to_string(), size: 75, allocated: true, fragmentation: None }),
+//         ("Block 08".to_string(), MemoryBlock { partition: "H".to_string(), location: "Block 8".to_string(), size: 45, allocated: false, fragmentation: None }),
+//         ("Block 09".to_string(), MemoryBlock { partition: "I".to_string(), location: "Block 9".to_string(), size: 25, allocated: true, fragmentation: None }),
+//         ("Block 10".to_string(), MemoryBlock { partition: "J".to_string(), location: "Block 10".to_string(), size: 100, allocated: false, fragmentation: None }),
+//         ("Block 11".to_string(), MemoryBlock { partition: "K".to_string(), location: "Block 11".to_string(), size: 35, allocated: true, fragmentation: None }),
+//         ("Block 12".to_string(), MemoryBlock { partition: "L".to_string(), location: "Block 12".to_string(), size: 110, allocated: false, fragmentation: None }),
+//     ]
+// }
 
 
-// Function to filter out the available memory locations and create a hashmap
+/* filter out the available memory locations and create a hashmap */
 pub fn _create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, MemoryBlock> {
     let mut free_locations: HashMap<String, MemoryBlock> = HashMap::new();
 
@@ -84,7 +104,7 @@ pub fn _create_free_location_map(memory: Vec<MemoryBlock>) -> HashMap<String, Me
     free_locations
 }
 
-
+/* perform best fit operation and aloocate process to block with less internal fragmentation */
 pub fn allocate_process_to_memory(
     process_size: i32,
     memory: &mut HashMap<String, MemoryBlock>,
@@ -128,7 +148,7 @@ pub fn allocate_process_to_memory(
 
 
 
-//function to get a array of user inputs and call allocate_process_to_memory() function
+/* get a array of user inputs and call allocate_process_to_memory() function */
 pub fn _handle_user_processes(
     processes: Vec<i32>,
     free_blocks: &mut HashMap<String, MemoryBlock>,
@@ -160,6 +180,7 @@ pub fn _handle_user_processes(
     }
 }
 
+/* perform internal compaction */
 pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
     let mut total_free_space = 0;
     let mut compacted_blocks: HashMap<String, MemoryBlock> = HashMap::new();
@@ -199,13 +220,15 @@ pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
 /* Unit tests for functions */
 #[cfg(test)]
 mod unit_test_memory {
+    use crate::memory::initialize_memory;
+
     #[test]
     fn test_random_memory() {
         // test 1
         // let ram = random_memory_allocator();
         // assert!(!ram.is_empty());
         // println!("random mem: {:#?}", ram);
-
+        println!("{:?}", initialize_memory());
         //test 2
         // let free_mem = create_free_location_map(initialize_memory());
         // println!("locations available: >>>>>>>> {:#?}", free_mem);
