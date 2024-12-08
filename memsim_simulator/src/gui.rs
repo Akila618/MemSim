@@ -1,7 +1,7 @@
 use eframe::egui;
 use std::collections::HashMap;
 use crate::memory::{initialize_memory, allocate_process_to_memory, compact_memory, MemoryBlock};
-
+use crate::bestfit::how_bestfit_works;
 pub struct MemorySimulatorApp {
     memory: HashMap<String, MemoryBlock>,
     processes: Vec<i32>,
@@ -14,9 +14,14 @@ impl MemorySimulatorApp {
         let initial_memory = initialize_memory();
         let mut memory_map = HashMap::new();
     
-        for (key, value) in initial_memory {
+        for (key, value) in initial_memory.clone() {
             memory_map.insert(key, value);
         }
+
+
+
+        println!("Memory Simulator initialized.");
+        println!("Memory blocks:{:#?}", &memory_map);
     
         Self {
             memory: memory_map,
@@ -87,16 +92,22 @@ impl MemorySimulatorApp {
                 ui.end_row();
     
                 for (key, block) in &self.memory {
-                    ui.label(key); // Block Name
-                    ui.label(format!("{}", block.size)); // Size
-                    ui.label(if block.allocated { "Yes" } else { "No" }); // Allocated
+                    ui.label(key);
+                    ui.label(format!("{}", block.size)); 
+                    ui.label(if block.allocated { "Yes" } else { "No" }); 
                     let fragmentation = block
                         .fragmentation
                         .as_ref()
-                        .map_or(0, |frag| frag.free); // Internal Fragmentation
+                        .map_or(0, |frag| frag.free);
                     ui.label(format!("{}", fragmentation));
                     ui.end_row();
                 }
+
+                ui.end_row();
+                ui.heading("How Best-Fit Works");
+                ui.end_row();
+                ui.label(how_bestfit_works());
+
             });
     }
     
