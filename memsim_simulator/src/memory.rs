@@ -126,7 +126,7 @@ pub fn allocate_process_to_memory(
     match best_fit_key {
         Some(key) => {
             if let Some(block) = memory.get_mut(&key) {
-                // Update the block
+                // update the block
                 block.allocated = true;
                 block.fragmentation = Some(Fragment {
                     _original: block.size,
@@ -221,17 +221,51 @@ pub fn compact_memory(free_blocks: &mut HashMap<String, MemoryBlock>) {
 #[cfg(test)]
 mod unit_test_memory {
     use crate::memory::initialize_memory;
+    #[test]
+    fn test_memory_size() {
+        let memory = initialize_memory().clone();
+        assert_eq!(memory.len(), 12);
+
+    }
 
     #[test]
-    fn test_random_memory() {
-        // test 1
-        // let ram = random_memory_allocator();
-        // assert!(!ram.is_empty());
-        // println!("random mem: {:#?}", ram);
-        println!("{:?}", initialize_memory());
-        //test 2
-        // let free_mem = create_free_location_map(initialize_memory());
-        // println!("locations available: >>>>>>>> {:#?}", free_mem);
+    fn test_block_allocated() {
+        let memory = initialize_memory().clone();
+        let block = memory.get("Block 01").unwrap();
+        assert_eq!(block.size, 64);
+        assert_eq!(block.allocated, true);
     }
+
+    #[test]
+    fn test_block_not_allocated(){
+        let memory = initialize_memory().clone();
+        let block = memory.get("Block 02").unwrap();   
+        assert_eq!(block.size, 130);
+        assert_eq!(block.allocated, false);
+    }
+
+    #[test]
+    fn test_allocation(){
+        let mut memory = initialize_memory();
+        let result = super::allocate_process_to_memory(100, &mut memory);
+        assert_eq!(result, "Process allocated to Block 10 with 0 KB internal fragmentation.");
+    }
+
+    #[test]
+    fn test_size_exceed(){
+        let mut memory = initialize_memory();
+        let result = super::allocate_process_to_memory(200, &mut memory);
+        assert_eq!(result, "No suitable block found.");
+    }
+
+    #[test]
+    fn test_compaction(){
+        let mut memory = initialize_memory();
+        super::allocate_process_to_memory(100, &mut memory);
+        super::compact_memory(&mut memory);
+        let block = memory.get("New Free Block").unwrap();
+        assert_eq!(block.size, 475);
+    }
+    
 }
 
